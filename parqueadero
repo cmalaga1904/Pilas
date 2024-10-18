@@ -1,0 +1,147 @@
+#include <iostream>
+using namespace std;
+
+struct nodo {
+string tipo;
+int movimientos;
+nodo *sig;
+};
+
+struct nodo *topMotos = NULL, *topCarros = NULL, *aux = NULL;
+int dineroGenerado = 0;
+
+void registrar() {
+    aux = (struct nodo*) malloc(sizeof(struct nodo));
+    cout << "Ingrese el tipo de vehiculo (moto/carro): ";
+    cin >> aux->tipo;
+    aux->movimientos = 0;
+
+    if (aux->tipo == "moto") {
+        if (!topMotos) {
+            topMotos = aux;
+            topMotos->sig = NULL;
+        } else {
+            aux->sig = topMotos;
+            topMotos = aux;
+        }
+        cout << "registre moto en el parqueadero." << endl;
+    } else if (aux->tipo == "carro") {
+        if (!topCarros) {
+            topCarros = aux;
+            topCarros->sig = NULL;
+        } else {
+            aux->sig = topCarros;
+            topCarros = aux;
+        }
+        cout << "registre en el parqueadero." << endl;
+    } else {
+        cout << "Tipo de vehiculo no valido." << endl;
+        free(aux);
+        return;
+    }
+
+    aux = NULL;
+}
+
+void mostrarDineroGenerado() {
+    cout << "Dinero total generado: " << dineroGenerado << " pesos." << endl;
+}
+
+void moverVehiculo(string tipo) {
+    if (tipo == "moto" && topMotos) {
+        topMotos->movimientos++;
+        cout << "Moto movida dentro del parqueadero." << endl;
+    } else if (tipo == "carro" && topCarros) {
+        topCarros->movimientos++;
+        cout << "Carro movido dentro del parqueadero." << endl;
+    } else {
+        cout << "No hay vehículos de ese tipo para mover." << endl;
+    }
+}
+
+void salirVehiculo() {
+    string tipo;
+    cout << "Ingrese el tipo de vehiculo que desea retirar (moto/carro): ";
+    cin >> tipo;
+
+    if (tipo == "moto" && topMotos) {
+        aux = topMotos;
+        topMotos = topMotos->sig;
+        int costo = 1000 + aux->movimientos * 100;
+        dineroGenerado += costo;
+        cout << "Moto retirada del parqueadero. Costo: " << costo << " pesos." << endl;
+        free(aux);
+    } else if (tipo == "carro" && topCarros) {
+        aux = topCarros;
+        topCarros = topCarros->sig;
+        int costo = 2000 + aux->movimientos * 100;
+        dineroGenerado += costo;
+        cout << "Carro retirado del parqueadero. Costo: " << costo << " pesos." << endl;
+        free(aux);
+    } else {
+        cout << "No hay vehículos de ese tipo para retirar." << endl;
+    }
+}
+
+void mostrarVehiculos() {
+    cout << "Vehiculos en el parqueadero:" << endl;
+    cout << "Motos:" << endl;
+    struct nodo *temp = topMotos;
+    while (temp != NULL) {
+        cout << "- Moto con " << temp->movimientos << " movimientos." << endl;
+        temp = temp->sig;
+    }
+
+    cout << "Carros:" << endl;
+    temp = topCarros;
+    while (temp != NULL) {
+        cout << "- Carro con " << temp->movimientos << " movimientos." << endl;
+        temp = temp->sig;
+    }
+}
+
+int main() {
+    int option;
+    
+    do {
+        cout << "\n--- Parqueadero ---\n";
+        cout << "1. Registrar vehiculo\n";
+        cout << "2. Mostrar vehiculos\n";
+        cout << "3. Mover vehiculo\n";
+        cout << "4. Salir vehiculo\n";
+        cout << "5. Mostrar dinero generado\n";
+        cout << "6. Salir\n";
+        cout << "Seleccione una opcion: ";
+        cin >> option;
+
+        switch (option) {
+            case 1:
+                registrar();
+                break;
+            case 2:
+                mostrarVehiculos();
+                break;
+            case 3: {
+                string tipo;
+                cout << "Ingrese el tipo de vehiculo a mover (moto/carro): ";
+                cin >> tipo;
+                moverVehiculo(tipo);
+                break;
+            }
+            case 4:
+                salirVehiculo();
+                break;
+            case 5:
+                mostrarDineroGenerado();
+                break;
+            case 6:
+                cout << "Saliendo del programa..." << endl;
+                break;
+            default:
+                cout << "Opcion no valida." << endl;
+                break;
+        }
+    } while (option != 6);
+
+    return 0;
+}

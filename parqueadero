@@ -1,10 +1,12 @@
 #include <iostream>
+#include <string>
 using namespace std;
 
 struct nodo {
-string tipo;
-int movimientos;
-nodo *sig;
+    string tipo;
+    string placa;
+    int movimientos;
+    nodo *sig;
 };
 
 struct nodo *topMotos = NULL, *topCarros = NULL, *aux = NULL;
@@ -14,6 +16,8 @@ void registrar() {
     aux = (struct nodo*) malloc(sizeof(struct nodo));
     cout << "Ingrese el tipo de vehiculo (moto/carro): ";
     cin >> aux->tipo;
+    cout << "Ingrese la placa del vehiculo: ";
+    cin >> aux->placa;
     aux->movimientos = 0;
 
     if (aux->tipo == "moto") {
@@ -24,7 +28,7 @@ void registrar() {
             aux->sig = topMotos;
             topMotos = aux;
         }
-        cout << "registre moto en el parqueadero." << endl;
+        cout << "Moto registrada en el parqueadero." << endl;
     } else if (aux->tipo == "carro") {
         if (!topCarros) {
             topCarros = aux;
@@ -33,7 +37,7 @@ void registrar() {
             aux->sig = topCarros;
             topCarros = aux;
         }
-        cout << "registre en el parqueadero." << endl;
+        cout << "Carro registrado en el parqueadero." << endl;
     } else {
         cout << "Tipo de vehiculo no valido." << endl;
         free(aux);
@@ -69,14 +73,14 @@ void salirVehiculo() {
         topMotos = topMotos->sig;
         int costo = 1000 + aux->movimientos * 100;
         dineroGenerado += costo;
-        cout << "Moto retirada del parqueadero. Costo: " << costo << " pesos." << endl;
+        cout << "Moto con placa " << aux->placa << " retirada del parqueadero. Costo: " << costo << " pesos." << endl;
         free(aux);
     } else if (tipo == "carro" && topCarros) {
         aux = topCarros;
         topCarros = topCarros->sig;
         int costo = 2000 + aux->movimientos * 100;
         dineroGenerado += costo;
-        cout << "Carro retirado del parqueadero. Costo: " << costo << " pesos." << endl;
+        cout << "Carro con placa " << aux->placa << " retirado del parqueadero. Costo: " << costo << " pesos." << endl;
         free(aux);
     } else {
         cout << "No hay vehículos de ese tipo para retirar." << endl;
@@ -88,14 +92,14 @@ void mostrarVehiculos() {
     cout << "Motos:" << endl;
     struct nodo *temp = topMotos;
     while (temp != NULL) {
-        cout << "- Moto con " << temp->movimientos << " movimientos." << endl;
+        cout << "- Moto con placa " << temp->placa << ", " << temp->movimientos << " movimientos." << endl;
         temp = temp->sig;
     }
 
     cout << "Carros:" << endl;
     temp = topCarros;
     while (temp != NULL) {
-        cout << "- Carro con " << temp->movimientos << " movimientos." << endl;
+        cout << "- Carro con placa " << temp->placa << ", " << temp->movimientos << " movimientos." << endl;
         temp = temp->sig;
     }
 }
@@ -143,5 +147,5 @@ int main() {
         }
     } while (option != 6);
 
-    return 0;
+ return 0;
 }
